@@ -1,6 +1,9 @@
 use std::collections::HashMap;
-use std::any::{TypeId, Any};
+use std::any::{TypeId,};
+use downcast::*;
 
-pub trait Subsystem {
+pub trait Subsystem: Any {
     fn on_start(&self) {}
 }
+
+downcast!(Subsystem);
