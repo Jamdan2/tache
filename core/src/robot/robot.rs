@@ -45,12 +45,7 @@ impl Robot {
     }
 
     pub fn on_start<F>(mut self, f: F) -> Self where F: Fn() + 'static {
-        self.listen(move |e| {
-            match e {
-                Event::START => f(),
-                _ => (),
-            }
-        });
+        listen!(self, Event::START => f);
         self
     }
 

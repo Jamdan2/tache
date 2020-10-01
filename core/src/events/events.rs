@@ -20,7 +20,7 @@ pub trait Events<E: Copy> {
 #[macro_export]
 macro_rules! listen(
     ($events:expr, $($pat:pat => $expr:expr),* $(,)?) => {
-        $events.listen(move |e| {
+        $events.listen(|e| {
             match e {
                 $($pat => $expr),*,
                 _ => (),

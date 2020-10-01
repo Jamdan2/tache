@@ -4,23 +4,17 @@ extern crate tache;
 extern crate tokio;
 
 use tache::prelude::*;
+use tache::state::{State};
 use tache::listen;
 
-#[tokio::main]
 fn main() {
-    println!("Yee");
+    let mut state = State::new(true);
 
-    Robot::new()
-        .on_start(|| {
-            println!("Hello, world!");
-        })
-        .simulate();
+    listen!(state, value => {
+        println!("{}", value);
+    });
 
-    for e in robot.events() {
-        match e {
-            Teleop => {
 
-            }
-        }
-    }
+
+    state.set(false);
 }
