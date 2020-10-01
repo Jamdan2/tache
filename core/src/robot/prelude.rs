@@ -1,2 +1,4 @@
 
-pub use crate::robot::Robot;
+pub use crate::robot::{
+    Robot,
+};

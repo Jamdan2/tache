@@ -1,32 +1,56 @@
-use std::io;
-use crate::subsystems::{Dispatcher, Subsystem};
-use tokio::{
-    runtime::Runtime,
-    spawn,
-};
-use tokio::time::{Delay, delay_for};
+use std::{io};
+use crate::prelude::*;
 use downcast::_std::time::Duration;
+
+#[derive(Copy, Clone, Debug)]
+pub enum Mode {
+    NONE,
+    DISABLED,
+    TELEOP,
+    AUTO,
+    TEST,
+}
+
+#[derive(Copy, Clone, Debug)]
+pub enum Event {
+    START,
+    DISABLE,
+    TELEOP,
+    AUTO,
+    TEST,
+}
 
 pub struct Robot {
     dispatcher: Dispatcher,
+    events: Bus<Event>,
+}
+
+impl Events<Event> for Robot {
+    fn bus(&mut self) -> &mut Bus<Event> {
+         &mut self.events
+    }
 }
 
 impl Robot {
     pub fn new() -> Self {
         Self {
             dispatcher: Dispatcher::new(),
+            events: Bus::new(),
         }
     }
 
-    pub fn with<S: 'static + Subsystem>(&mut self, s: S) -> &mut Self {
+    pub fn with<S: 'static + Subsystem>(mut self, s: S) -> Self {
         self.dispatcher.add(s);
         self
     }
 
-    pub fn on_start<F>(&mut self, f: F) -> &mut Self where F: FnOnce(Context) {
-        println!("Starting Robot...");
-        let ctx = Context::from(self);
-        f(ctx);
+    pub fn on_start<F>(mut self, f: F) -> Self where F: Fn() + 'static {
+        self.listen(move |e| {
+            match e {
+                Event::START => f(),
+                _ => (),
+            }
+        });
         self
     }
 
@@ -34,32 +58,17 @@ impl Robot {
         self.dispatcher.get::<S>()
     }
 
-    pub fn run(&self) -> Result<(), io::Error> {
-        let mut rt = Runtime::new()?;
+    pub fn run(self) -> Result<(), io::Error> {
+        unimplemented!();
+    }
 
-        rt.block_on(async {
-            loop {
-                delay_for(Duration::from_millis(20)).await;
+    pub async fn simulate(mut self) -> Result<(), &'static str> {
+        self.fire(Event::START);
 
-            };
-        });
+        loop {
+
+        }
 
         Ok(())
-    }
-}
-
-pub struct Context<'a> {
-    robot: &'a mut Robot,
-}
-
-impl<'a> Context<'a> {
-    fn from(robot: &'a mut Robot) -> Self {
-        Self {
-            robot,
-        }
-    }
-
-    pub fn get<S: 'static + Subsystem>(&self) -> Option<&S> {
-        self.robot.get::<S>()
     }
 }

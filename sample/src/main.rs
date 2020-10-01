@@ -4,17 +4,23 @@ extern crate tache;
 extern crate tokio;
 
 use tache::prelude::*;
+use tache::listen;
 
-struct Arm;
-
-impl Subsystem for Arm {}
-
+#[tokio::main]
 fn main() {
+    println!("Yee");
+
     Robot::new()
-        .with(Arm)
-        .on_start(|ctx| {
-            println!("Heya! I'm Starting!");
+        .on_start(|| {
+            println!("Hello, world!");
         })
-        .run()
-        .unwrap();
+        .simulate();
+
+    for e in robot.events() {
+        match e {
+            Teleop => {
+
+            }
+        }
+    }
 }
