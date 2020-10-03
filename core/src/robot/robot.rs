@@ -45,7 +45,7 @@ impl Robot {
     }
 
     pub fn on_start<F>(mut self, f: F) -> Self where F: Fn() + 'static {
-        listen!(self, Event::START => f);
+        listen!(self.events, Event::START => f());
         self
     }
 
@@ -57,8 +57,8 @@ impl Robot {
         unimplemented!();
     }
 
-    pub async fn simulate(mut self) -> Result<(), &'static str> {
-        self.fire(Event::START);
+    pub fn simulate(mut self) -> Result<(), &'static str> {
+        fire!(self.events, Event::START);
 
         loop {
 

@@ -8,13 +8,9 @@ use tache::state::{State};
 use tache::listen;
 
 fn main() {
-    let mut state = State::new(true);
-
-    listen!(state, value => {
-        println!("{}", value);
-    });
-
-
-
-    state.set(false);
+    Robot::new()
+        .on_start(|| {
+            println!("Hello, world!");
+        })
+        .simulate();
 }
