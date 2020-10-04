@@ -1,0 +1,35 @@
+# tache
+
+A general purpose robotics library for rust! The framework is designed to be able to use multiple backends. Targets will include Arduino, RoboRIO, and more!
+Based on the subsystem-command pattern.
+
+### Example
+
+```rust
+struct Arm {
+  motor: Motor,
+}
+
+impl Arm {
+  pub fn new() -> Self {
+    Self {
+      motor: Motor::new(0),
+    }
+  }
+  
+  pub fn move(&mut self, output: f64) {
+    self.motor.set_output(output);
+  }
+}
+
+fn main() {
+  Robot::new()
+    .on_start(|exec| {
+      exec(|c| {
+        let arm = grab!(c, Arm);
+        arm.move(1.0)
+      });
+    })
+    .run();
+}
+```
