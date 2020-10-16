@@ -7,5 +7,3 @@ extern crate downcast;
 pub mod prelude;
 pub mod robot;
 pub mod subsystems;
-pub mod events;
-pub mod state;

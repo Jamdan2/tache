@@ -4,8 +4,6 @@ extern crate tache;
 extern crate tokio;
 
 use tache::prelude::*;
-use tache::state::{State};
-use tache::listen;
 
 // test changes
 
@@ -14,5 +12,6 @@ fn main() {
         .on_start(|| {
             println!("Hello, world!");
         })
-        .simulate();
+        .simulate()
+        .unwrap();
 }

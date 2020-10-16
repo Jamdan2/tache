@@ -22,20 +22,12 @@ pub enum Event {
 
 pub struct Robot {
     dispatcher: Dispatcher,
-    events: Bus<Event>,
-}
-
-impl Events<Event> for Robot {
-    fn bus(&mut self) -> &mut Bus<Event> {
-         &mut self.events
-    }
 }
 
 impl Robot {
     pub fn new() -> Self {
         Self {
             dispatcher: Dispatcher::new(),
-            events: Bus::new(),
         }
     }
 
@@ -45,7 +37,6 @@ impl Robot {
     }
 
     pub fn on_start<F>(mut self, f: F) -> Self where F: Fn() + 'static {
-        listen!(self.events, Event::START => f());
         self
     }
 
@@ -58,7 +49,6 @@ impl Robot {
     }
 
     pub fn simulate(mut self) -> Result<(), &'static str> {
-        fire!(self.events, Event::START);
 
         loop {
 
